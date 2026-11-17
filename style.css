@@ -22,4 +22,6 @@ canvas {
   margin-top: 30px;
   margin-left: auto;
   margin-right: auto;
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
 }
