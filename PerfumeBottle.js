@@ -1,5 +1,5 @@
 // 캔버스 위에 놓이는 향수병
-// kind: "heart" (분홍), "drop" (파랑), "sparkle" (노랑)
+// kind: "heart" (분홍), "bubble" (파랑), "sparkle" (노랑)
 class PerfumeBottle {
   constructor(x, baseY, config) {
     this.x = x;
@@ -106,7 +106,7 @@ class PerfumeBottle {
 
     // 향수 액체
     const liquidTop = bodyTop + this.bodyH * 0.32;
-    fill(this.color.r, this.color.g, this.color.b, 60);
+    fill(this.color.r, this.color.g, this.color.b, 72);
     rect(-half + 6, liquidTop, this.bodyW - 12, this.bodyH * 0.68 - 6, 16);
     fill(255, 255, 255, 62);
     rect(-half + 10, liquidTop, this.bodyW - 20, 2, 1);

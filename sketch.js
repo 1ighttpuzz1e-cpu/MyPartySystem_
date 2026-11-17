@@ -19,8 +19,8 @@ function setup() {
     }),
     new PerfumeBottle(width * 0.5, baseY, {
       name: "마린",
-      typeLabel: "물방울 파티클",
-      kind: "drop",
+      typeLabel: "버블 파티클",
+      kind: "bubble",
       color: { r: 110, g: 185, b: 255 },
     }),
     new PerfumeBottle(width * 0.8, baseY, {
@@ -96,7 +96,7 @@ function drawHint() {
 
   fill(255, 255, 255, 90);
   textSize(12);
-  text("분홍은 하트, 파랑은 물방울, 노랑은 반짝임", width / 2, 58);
+  text("분홍은 하트, 파랑은 버블, 노랑은 반짝임", width / 2, 58);
   pop();
 }
 
