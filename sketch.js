@@ -1,20 +1,120 @@
 let system;
 let spout;
+let clouds = [];
+let butterflies = [];
+
+const BUTTERFLY_COLORS = [
+  [255, 200, 120],
+  [255, 150, 180],
+  [170, 210, 255],
+];
 
 function setup() {
   createCanvas(720, 400);
   // 물뿌리개 주둥이 끝에서 물이 나온다
   spout = createVector(225, 193);
   system = new ParticleSystem(spout);
+
+  // 천천히 흘러가는 구름
+  for (let i = 0; i < 4; i++) {
+    clouds.push({
+      x: random(-100, width),
+      y: random(40, 170),
+      scale: random(0.7, 1.4),
+      speed: random(0.15, 0.4),
+    });
+  }
+
+  // 날아다니는 나비
+  for (let i = 0; i < 4; i++) {
+    butterflies.push({
+      x: random(120, width - 100),
+      y: random(80, 220),
+      phase: random(TWO_PI),
+      speed: random(0.7, 1.3),
+      size: random(12, 18),
+      color: random(BUTTERFLY_COLORS),
+    });
+  }
 }
 
 function draw() {
   background(51);
+
+  updateClouds();
+  drawClouds();
+  drawButterflies();
+
   drawFlowerBed();
   drawWateringCan();
 
   system.addParticle();
   system.run();
+}
+
+function updateClouds() {
+  for (let c of clouds) {
+    c.x += c.speed;
+    if (c.x > width + 140) {
+      c.x = -160;
+      c.y = random(40, 170);
+    }
+  }
+}
+
+function drawClouds() {
+  noStroke();
+  fill(76, 87, 104);
+  for (let c of clouds) {
+    push();
+    translate(c.x, c.y);
+    scale(c.scale);
+    ellipse(0, 0, 130, 48);
+    ellipse(-45, 6, 80, 38);
+    ellipse(45, 8, 90, 40);
+    ellipse(-8, -18, 80, 50);
+    ellipse(32, -12, 60, 42);
+    pop();
+  }
+}
+
+function drawButterflies() {
+  for (let b of butterflies) {
+    b.x += sin(frameCount * 0.012 * b.speed + b.phase) * 1.1 + 0.25;
+    b.y += cos(frameCount * 0.017 * b.speed + b.phase) * 0.7;
+    b.y = constrain(b.y, 70, 250);
+
+    if (b.x > width + 40) b.x = -40;
+    if (b.x < -40) b.x = width + 40;
+
+    let flap = 0.35 + abs(sin(frameCount * 0.25 + b.phase)) * 0.65;
+    let tilt = sin(frameCount * 0.01 * b.speed + b.phase) * 0.4;
+
+    push();
+    translate(b.x, b.y);
+    rotate(tilt);
+    noStroke();
+
+    // 더듬이
+    stroke(70);
+    strokeWeight(1.5);
+    line(0, -b.size * 0.5, -b.size * 0.3, -b.size * 1.1);
+    line(0, -b.size * 0.5, b.size * 0.3, -b.size * 1.1);
+    noStroke();
+
+    // 날개
+    fill(b.color);
+    ellipse(-b.size * 0.5 * flap, -b.size * 0.35, b.size * 0.9, b.size * 1.1);
+    ellipse(b.size * 0.5 * flap, -b.size * 0.35, b.size * 0.9, b.size * 1.1);
+    ellipse(-b.size * 0.4 * flap, b.size * 0.35, b.size * 0.7, b.size * 0.8);
+    ellipse(b.size * 0.4 * flap, b.size * 0.35, b.size * 0.7, b.size * 0.8);
+
+    // 몸통
+    fill(70);
+    ellipse(0, 0, b.size * 0.26, b.size * 1.1);
+
+    pop();
+  }
 }
 
 function drawWateringCan() {
