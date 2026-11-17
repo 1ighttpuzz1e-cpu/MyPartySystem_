@@ -1,5 +1,7 @@
 let system;
 let spout;
+let canPos;
+let following = false;
 let clouds = [];
 let butterflies = [];
 
@@ -11,8 +13,10 @@ const BUTTERFLY_COLORS = [
 
 function setup() {
   createCanvas(720, 400);
+  // 물뿌리개 몸통의 중심
+  canPos = createVector(135, 235);
   // 물뿌리개 주둥이 끝에서 물이 나온다
-  spout = createVector(225, 193);
+  spout = createVector(canPos.x + 90, canPos.y - 42);
   system = new ParticleSystem(spout);
 
   // 천천히 흘러가는 구름
@@ -46,10 +50,31 @@ function draw() {
   drawButterflies();
 
   drawFlowerBed();
+  followMouse();
   drawWateringCan();
 
   system.addParticle();
   system.run();
+}
+
+// 마우스를 움직이면 물뿌리개가 그쪽으로 따라온다
+function mouseMoved() {
+  following = true;
+}
+
+function mouseDragged() {
+  following = true;
+}
+
+function followMouse() {
+  if (!following) return;
+
+  canPos.x = lerp(canPos.x, constrain(mouseX, 70, width - 120), 0.15);
+  canPos.y = lerp(canPos.y, constrain(mouseY, 90, height - 70), 0.15);
+
+  // 물이 나오는 위치도 물뿌리개를 따라간다
+  spout.set(canPos.x + 90, canPos.y - 42);
+  system.origin.set(spout.x, spout.y);
 }
 
 function updateClouds() {
@@ -118,23 +143,28 @@ function drawButterflies() {
 }
 
 function drawWateringCan() {
+  push();
+  translate(canPos.x, canPos.y);
+
   // 손잡이
   noFill();
   stroke(190, 200, 210);
   strokeWeight(9);
-  arc(135, 198, 72, 62, PI, TWO_PI);
+  arc(0, -37, 72, 62, PI, TWO_PI);
 
   // 주둥이
   strokeWeight(15);
-  line(150, 205, spout.x, spout.y);
+  line(15, -30, 90, -42);
 
   // 주둥이 끝(물이 나오는 곳)
   noStroke();
   fill(190, 200, 210);
-  ellipse(spout.x, spout.y, 18, 18);
+  ellipse(90, -42, 18, 18);
 
   // 몸통
-  ellipse(135, 235, 115, 100);
+  ellipse(0, 0, 115, 100);
+
+  pop();
 }
 
 function drawFlowerBed() {
